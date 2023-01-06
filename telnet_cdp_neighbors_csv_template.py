@@ -6,22 +6,29 @@ switch_ip = '10.0.0.1'
 username = 'admin'
 password = 'password'
 
-# Connect to the switch using Telnet
-tn = telnetlib.Telnet(switch_ip)
+try:
+  # Connect to the switch using Telnet
+  tn = telnetlib.Telnet(switch_ip)
 
-# Wait for the login prompt, then enter the username and password
-tn.read_until(b'Username: ')
-tn.write(username.encode('ascii') + b'\n')
+  # Wait for the login prompt, then enter the username and password
+  tn.read_until(b'Username: ')
+  tn.write(username.encode('ascii') + b'\n')
 
-tn.read_until(b'Password: ')
-tn.write(password.encode('ascii') + b'\n')
+  tn.read_until(b'Password: ')
+  tn.write(password.encode('ascii') + b'\n')
 
-# Run the "show cdp neighbors" command and store the output
-tn.write(b'show cdp neighbors\n')
-output = tn.read_until(b'#').decode('utf-8')
+  # Run the "show cdp neighbors" command and store the output
+  tn.write(b'show cdp neighbors\n')
+  output = tn.read_until(b'#').decode('utf-8')
 
-# Close the Telnet connection
-tn.close()
+except Exception as e:
+  # If an error occurred, print it and exit
+  print(f'An error occurred: {e}')
+  exit()
+
+finally:
+  # Close the Telnet connection
+  tn.close()
 
 # Split the output into a list of rows
 rows = output.split('\n')
